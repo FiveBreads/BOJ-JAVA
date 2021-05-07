@@ -31,6 +31,10 @@ public class Num2504 {
         case ']':
         case ')':
           String hopeBracket = bracketMap.get(Character.toString(c));
+          if (stk.isEmpty()) {
+            System.out.println(0); //초기에 )혹은 ]가 들어왔을 경우 즉시 탈출
+            return;
+          }
           String popData = stk.pop();
           if (bracketMap.containsValue(popData)){
             //값 치환 연산
@@ -61,6 +65,10 @@ public class Num2504 {
     }
     int sum = 0;
     while(!stk.isEmpty()){
+      if(!stk.peek().chars().allMatch(Character::isDigit)){ //(혹은 [만 들어와서 값 치환이 안된 경우
+        System.out.println(0);
+        return;
+      }
       sum += Integer.parseInt(stk.pop());
     }
     System.out.println(sum);
