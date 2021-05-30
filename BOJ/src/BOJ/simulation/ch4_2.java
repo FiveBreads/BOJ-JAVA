@@ -9,74 +9,68 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 public class ch4_2 {
+    static int n, m, x, y, direction;
+    static int cnt = 1;
+    static int[][] map = new int[50][50];
+    static int[][] data = new int[50][50];
+                    // 북 동 남 서
+    static int[] dx = {-1, 0, 1, 0};
+    static int[] dy = {0, 1, 0, -1};
 
-    static int view;
-
-    static void turnLeft(){
-        view--;
-        if (view < 0){
-            view = 3;
-        }
-    }
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int n = Integer.parseInt(st.nextToken());
-        int m = Integer.parseInt(st.nextToken());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+
+
 
         st = new StringTokenizer(br.readLine());
-        int y = Integer.parseInt(st.nextToken());
-        int x = Integer.parseInt(st.nextToken());
-        view = Integer.parseInt(st.nextToken());
+        x = Integer.parseInt(st.nextToken());
+        y = Integer.parseInt(st.nextToken());
+        direction = Integer.parseInt(st.nextToken());
 
-        int[][] map = new int[n][m];
-        boolean[][] isMoved = new boolean[n][m];
-        for (int i = 0; i < map.length; i++) {
+        for (int i = 0; i < n; i++) {
             st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < map[0].length; j++) {
+            for (int j = 0; j < m; j++) {
                 map[i][j] = Integer.parseInt(st.nextToken());
-                isMoved[i][j] = false;
             }
         }
-
-        int[] dx = {0, 1, 0, -1};
-        int[] dy = {-1, 0, 1, 0};
-        int count = 0;
-        int turn = 0;
+        data[x][y] = 1;
+        int nx, ny, turnCnt = 0;
         while (true){
             turnLeft();
-            int nx = x + dx[view];
-            int ny = y + dy[view];
-
-            if (!isMoved[ny][nx] && map[ny][nx] != 1){
+            nx = x + dx[direction];
+            ny = y + dy[direction];
+            if (map[nx][ny] == 0 && data[nx][ny] == 0) {
+                map[nx][ny] = 1;
                 x = nx;
                 y = ny;
-                isMoved[ny][nx] = true;
-                count++;
-                turn = 0;
-                continue;
-            }else {
-                turn++;
+                cnt += 1;
+                turnCnt = 0;
+            } else {
+                turnCnt++;
             }
-            if (turn == 4){
-                nx = x - dx[view];
-                ny = y - dy[view];
-                if (map[ny][nx] == 0){
+            if (turnCnt == 4){
+                nx = x - dx[direction];
+                ny = y - dy[direction];
+                if (data[nx][ny] == 0){
                     x = nx;
                     y = ny;
                 }else {
                     break;
                 }
-                turn = 0;
+                turnCnt = 0;
             }
         }
-        System.out.println(count);
+    }
 
-        Map<String, Integer> data = new HashMap<>();
-        Collection<Integer> values = data.values();
-        for (Integer value : values) {
-            
+    static void turnLeft(){
+        direction--;
+        if (direction == -1){
+            direction = 3;
         }
     }
+
 }
