@@ -16,7 +16,7 @@ public class ch12_4 {
         return result;
     }
 
-    public static void solution(int[][] key, int[][] lock){
+    public static boolean solution(int[][] key, int[][] lock){
         int n = key.length;
         int m = lock.length;
         int[][] newLock = new int[m * 3][m * 3];
@@ -25,15 +25,29 @@ public class ch12_4 {
                 newLock[i + m][j + m] = lock[i][j];
             }
         }
+        int t = m - n + 1;
         for (int relocate = 0; relocate < 4; relocate++) {
             key = rotateMatrixBy90Degree(key);
-            for (int i = 0; i < m; i++) {
-                for (int j = 0; j < m; j++) {
-
+            for (int i = t; i < 2*m; i++) {
+                for (int j = t; j < 2*m; j++) { //key의 (0,0) 값이 움직일 수 있는 범위
+                    //key가 lock에 값을 더하는 과정
+                    for (int k = i; k < i+n; k++) {
+                        for (int l = j; l < j+n; l++) {
+                            newLock[k][l] += key[k][l];
+                        }
+                    }
+                    if (check(newLock)){
+                        return true;
+                    }
+                    for (int k = i; k < i+n; k++) {
+                        for (int l = j; l < j+n; l++) {
+                            newLock[k][l] -= key[k][l];
+                        }
+                    }
                 }
             }
         }
-
+        return false;
     }
 
     public static boolean check(int[][] newLock){
@@ -47,6 +61,8 @@ public class ch12_4 {
     }
 
     public static void main(String[] args){
-
+        int[][] key = {{1, 1, 1}, {1, 1, 0}, {1, 0, 1}};
+        int[][] lock = {{1, 1, 1}, {1, 1, 0}, {1, 0, 1}};
+        System.out.println(solution(key, lock));
     }
 }
