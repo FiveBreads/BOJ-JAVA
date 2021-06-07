@@ -3,10 +3,7 @@ package BOJ.search;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 class Country{
     private int x;
@@ -35,7 +32,7 @@ public class ch13_7 {
     static int[] dx = {-1, 0, 1, 0};
     static int[] dy = {0, 1, 0, -1};
 
-    static void bfs(int x, int y){
+    static boolean bfs(int x, int y){
         //값 변경용
         ArrayList<Country> list = new ArrayList<>();
         list.add(new Country(x, y));
@@ -54,12 +51,12 @@ public class ch13_7 {
                 int value = Math.abs(countries[nx][ny] - countries[gox][goy]);
                 if (value >= l && value <= r) {
                     visit[gox][goy] = true;
-                    que.add(new Country(nx,ny));
-                    list.add(new Country(nx,ny));
+                    que.add(new Country(gox,goy));
+                    list.add(new Country(gox,goy));
                 }
             }
         }
-        if (list.size() == 1) return;
+        if (list.size() == 1) return false;
         int sum = 0;
         int cnt = 0;
         //값 평균 로직
@@ -78,6 +75,7 @@ public class ch13_7 {
             visit[xx][yy] = false;
         }
         totCnt++;
+        return true;
     }
 
     public static void main(String[] args) throws IOException {
@@ -95,14 +93,18 @@ public class ch13_7 {
                 visit[i][j] = false;
             }
         }
-
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 visit[i][j] = true;
-                bfs(i,j);
+                boolean isGroup = bfs(i,j);
                 visit[i][j] = false;
+                if(isGroup){
+                    i = 0;
+                    j = -1;
+                }
             }
         }
+
         System.out.println(totCnt);
     }
 }
