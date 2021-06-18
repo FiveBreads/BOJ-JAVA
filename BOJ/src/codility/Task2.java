@@ -32,6 +32,6 @@ public class Task2 {
         }
         HashMap<Integer, Integer> map = new HashMap<>();
         Object[] objects = map.keySet().toArray();
-        return (int) objects[0];
+
     }
 }
