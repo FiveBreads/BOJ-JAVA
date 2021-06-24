@@ -29,6 +29,7 @@ public class Task3 {
         int[] arr = new int[0];
         System.out.println(arr.length);
         ArrayList<Integer> list = new ArrayList<>();
+        Queue<Integer> que = new LinkedList<>();
 
     }
 }
