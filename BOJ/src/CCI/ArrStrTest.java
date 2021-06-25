@@ -3,13 +3,48 @@ package CCI;
 public class ArrStrTest {
 
     public static void main(String[] args) {
+/*
         String str1 = "plea";
         String str2 = "ple";
-
-        //System.out.println(canEqual(str1, str2));
-
+        System.out.println(canEqual(str1, str2));
+*/
+/*
         String dupStr = "aabcccca";
         compactStr(dupStr);
+*/
+        int N = 4;
+        int[][] image = new int[N][N];
+        int count = 1;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                image[i][j] = count;
+                count++;
+            }
+        }
+        int lessLen = N - 1;
+        int[][] rotate = new int[N][N];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                rotate[j][lessLen - i] = image[i][j];
+            }
+        }
+        System.out.println("===original===");
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                System.out.print(image[i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println("==============\n");
+
+        System.out.println("===rotate===");
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                System.out.print(rotate[i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println("==============\n");
     }
 
     private static void compactStr(String dupStr) {
