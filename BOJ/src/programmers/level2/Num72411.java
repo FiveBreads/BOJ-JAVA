@@ -1,45 +1,69 @@
 package programmers.level2;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Set;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class Num72411 {
-//메뉴 리뉴얼
-    public static String[] solution(String[] orders, int[] course){
-        //97 - 122 (A-Z)
-        int alpha = 97;
+
+    public static Map<String, Integer> data;
+    public static int m;
+
+    public String[] solution(String[] orders, int[] course) {
+
+        PriorityQueue<String> pq = new PriorityQueue<>();
         for (int i = 0; i < course.length; i++) {
-            ArrayList<String> list = new ArrayList<>();
+            data = new HashMap<>();
+            m = 0;
             for (int j = 0; j < orders.length; j++) {
-                for (int k = 0; k < orders[j].length(); k++) {
-                    if (orders[j].charAt(k) == (char) alpha){
-                        list.add(orders[j]);
-                        break;
+                if (orders[j].length() < course[i])
+                    continue;
+                dfs(0, new StringBuilder(), orders[j], course[i], 0);
+            }
+            if (m > 1){
+                Set<String> combi = data.keySet();
+                for (String menu : combi) {
+                    if (data.get(menu) == m){
+                        pq.offer(menu);
                     }
                 }
             }
-            dfs(course[i] - 1, alpha + 1, list);
         }
-        return null;
+        String[] answer = new String[pq.size()];
+        int i = 0;
+        while (!pq.isEmpty()) {
+            answer[i] = pq.poll();
+            i++;
+        }
+        return answer;
     }
 
-    public static void dfs(int depth, int alpha, ArrayList<String> list){
-        if (depth == 0){
-            //최대값을 계산한다.
+    public void dfs(int cnt, StringBuilder builder, String target, int max, int index){
+        if (cnt == max){
+            System.out.println("-----------------");
+            System.out.println("before ::: " + builder.toString());
+            Arrays.sort(builder.chars().toArray());
+            System.out.println("after ::: " + builder.toString());
+            data.put(builder.toString(), data.getOrDefault(builder.toString(), 0) + 1);
+            m = Math.max(m, data.get(builder.toString()));
             return;
         }
-        ArrayList<String> tmpList = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            for (int j = 0; j < list.get(i).length(); j++) {
-                if (list.get(i).charAt(j) == (char) alpha){
-                    tmpList.add(list.get(i));
-                    break;
-                }
-            }
-        }
 
+        for (int i = index; i < target.length(); i++) {
+            dfs(cnt + 1, builder.append(target.charAt(i)), target, max, i + 1);
+            builder.deleteCharAt(builder.length() - 1);
+        }
     }
 
-    public static void main(String[] args) {
-
+    @Test
+    void 메뉴_리뉴얼(){
+        //Assertions.assertArrayEquals(new String[]{"AC", "ACDE", "BCFG", "CDE"}, solution(new String[]{"ABCFG", "AC", "CDE", "ACDE", "BCFG", "ACDEH"}, new int[]{2,3,4}));
+        //Assertions.assertArrayEquals(new String[]{"ACD", "AD", "ADE", "CD", "XYZ"}, solution(new String[]{"ABCDE", "AB", "CD", "ADE", "XYZ", "XYZ", "ACD"}, new int[]{2,3,5}));
+        Assertions.assertArrayEquals(new String[]{"WX", "XY"}, solution(new String[]{"XYZ", "XWY", "WXA"}, new int[]{2,3,4}));
     }
 }
