@@ -2,13 +2,80 @@ package programmers.level2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 
-class Candidate{
+public class Nun42890 {
+
+    static Set<String> keySet;
+
+    public int solution(String[][] relation) {
+        keySet = new HashSet<>();
+
+        for (int keyCnt = 1; keyCnt <= relation[0].length; keyCnt++) {
+            dfs(keyCnt, new ArrayList<>(), 0, relation);
+        }
+
+        return keySet.size();
+    }
+
+    private void dfs(int keyCnt, List<Integer> indexList, int start, String[][] relation) {
+        if (indexList.size() == keyCnt){
+            for (int i = 0; i < relation.length; i++) {
+                StringBuilder from = new StringBuilder();
+                for (int k = 0; k < indexList.size(); k++) {
+                    from.append(relation[i][indexList.get(k)]);
+                }
+                for (int j = i + 1; j < relation.length; j++) {
+                    StringBuilder to = new StringBuilder();
+                    for (int k = 0; k < indexList.size(); k++) {
+                        to.append(relation[j][indexList.get(k)]);
+                    }
+                    if (from.toString().equals(to.toString())) return;
+                }
+            }
+            StringBuilder sb = new StringBuilder();
+            for (Integer integer : indexList) {
+                sb.append(integer);
+            }
+            char[] chars = sb.toString().toCharArray();
+            Arrays.sort(chars);
+
+            String key = new String(chars);
+
+            for (String s : keySet) {
+                if (key.startsWith(s)) return;
+            }
+            keySet.add(key);
+        }
+        int sum = 0;
+        for (int i = start; i < relation[0].length; i++) {
+            indexList.add(i);
+            dfs(keyCnt, indexList, start + 1, relation);
+            indexList.remove(indexList.size() - 1);
+        }
+    }
+
+    @Test
+    void 후보키(){
+        Assertions.assertEquals(2, solution(new String[][]{{"100","ryan","music","2"},{"200","apeach","math","2"},{"300","tube","computer","3"},{"400","con","computer","4"},{"500","muzi","music","3"},{"600","apeach","music","2"}}));
+        Assertions.assertEquals(0, solution(new String[][]{{"ab", "c"}, {"a", "bc"}, {"x", "yz"}, {"x", "c"}}));
+        Assertions.assertEquals(2, solution(new String[][]{
+            {"a", "1", "4"},
+            {"2", "1", "5"},
+            {"a", "2", "4"}}));
+        Assertions.assertEquals(2, solution(new String[][]{{"100", "r"},{"200", "c"},{"300", "d"}}));
+    }
+}
+
+
+
+/*class Candidate{
 
     private ArrayList<Boolean> list;
     private int column_cnt;
@@ -93,4 +160,4 @@ public class Nun42980 {
     void 후보키(){
         Assertions.assertEquals(2, solution(new String[][]{{"100","ryan","music","2"},{"200","apeach","math","2"},{"300","tube","computer","3"},{"400","con","computer","4"},{"500","muzi","music","3"},{"600","apeach","music","2"}}));
     }
-}
+}*/

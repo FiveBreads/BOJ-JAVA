@@ -1,14 +1,130 @@
 package programmers.level2;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.PriorityQueue;
+import java.util.Map.Entry;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+public class Num17683{
+    static Map<String, String> convertMap = new HashMap<>();
 
-class Music implements Comparable<Music>{
+    public void initMap(){
+        convertMap.put("C#", "c");
+        convertMap.put("D#", "d");
+        convertMap.put("F#", "f");
+        convertMap.put("G#", "g");
+        convertMap.put("A#", "a");
+        convertMap.put("B#", "b");
+        convertMap.put("E#", "e");
+    }
+
+    public String solution(String m, String[] musicinfos) {
+        initMap();
+        m = replaceScale(m);
+
+        ArrayList<ArrayList<Object>> list = new ArrayList<>();
+
+        int runtime;
+        String sheet;
+        for (int i = 0; i < musicinfos.length; i++) {
+            //0: 시작시간, 1: 종료시간, 2: 제목, 3: 악보
+            String[] info = musicinfos[i].split(",");
+            runtime = calculateRuntime(info[0], info[1]);
+            sheet = getRecursiveMusicSheet(runtime, replaceScale(info[3]));
+
+            ArrayList<Object> infoList = new ArrayList<>();
+            infoList.add(info[3]);
+            infoList.add(runtime);
+            infoList.add(i);
+            infoList.add(info[2]);
+
+            if (sheet.contains(m)){
+                list.add(infoList);
+            }
+        }
+
+        if (list.size() == 0){
+            return "(None)";
+        }else{
+            Collections.sort(list, new Comparator<ArrayList<Object>>() {
+                @Override
+                public int compare(ArrayList<Object> o1, ArrayList<Object> o2) {
+                    if ((int) o1.get(1) == (int) o2.get(1)) {
+                        return Integer.compare((int) o1.get(2), (int) o2.get(2));
+                    }
+                    return (int) o2.get(1) - (int) o1.get(1);
+                }
+            });
+            return (String) list.get(0).get(3);
+        }
+    }
+
+    private String getRecursiveMusicSheet(int runtime, String s) {
+        StringBuilder sb = new StringBuilder();
+        int scaleIndex = 0;
+        int musicLength = s.length();
+        for(int j = 0 ; j < runtime ; ++j) {
+            sb.append(s.charAt(scaleIndex));
+            scaleIndex = (scaleIndex + 1) % musicLength;
+        }
+        return sb.toString();
+    }
+
+    private int calculateRuntime(String startTime, String endTime) {
+        String[] startHHMM = startTime.split(":");
+        String[] endHHMM = endTime.split(":");
+
+        int sHH = Integer.parseInt(startHHMM[0]);
+        int sMM = Integer.parseInt(startHHMM[1]);
+        int eHH = Integer.parseInt(endHHMM[0]);
+        int eMM = Integer.parseInt(endHHMM[1]);
+
+        return (eHH - sHH) * 60 + (eMM - sMM);
+    }
+
+    public String replaceScale(String str){
+        for (Entry<String, String> entry : convertMap.entrySet()) {
+            str = str.replaceAll(entry.getKey(), entry.getValue());
+        }
+        return str;
+    }
+    @Test
+    void 방금그곡(){
+        Assertions.assertEquals("HELLO", solution("ABCDEFG", new String[]{"12:00,12:14,HELLO,CDEFGAB", "13:00,13:05,WORLD,ABCDEF"}));
+        Assertions.assertEquals("FOO", solution("CC#BCC#BCC#BCC#B", new String[]{"03:30,04:00,FOO,CC#B", "04:52,05:00,BAR,CC#BCC#BCC#B"}));
+        Assertions.assertEquals("WORLD", solution("ABC", new String[]{"12:00,12:14,HELLO,C#DEFGAB", "13:00,13:05,WORLD,ABCDEF"}));
+        Assertions.assertEquals("HAPPY", solution("A#", new String[]{"13:00,13:02,HAPPY,B#A#"}));
+        Assertions.assertEquals("(None)", solution("CDEFGAC", new String[]{"12:00,12:06,HELLO,CDEFGA"}));
+        Assertions.assertEquals("FOO", solution("CCB", new String[]{"03:00,03:10,FOO,CCB#CCB", "04:00,04:08,BAR,ABC"}));
+        Assertions.assertEquals("FOO", solution("CCB", new String[]{"03:00,03:10,FOO,CCB#CCB", "04:00,04:10,BAR,CCB"}));
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*class Music implements Comparable<Music>{
     private int runtime;
     private String name;
     private int order;
@@ -114,4 +230,4 @@ public class Num17683 {
         Assertions.assertEquals("FOO", solution("CC#BCC#BCC#BCC#B", new String[]{"03:30,04:00,FOO,CC#B", "04:52,05:00,BAR,CC#BCC#BCC#B"}));
         Assertions.assertEquals("WORLD", solution("ABC", new String[]{"12:00,12:14,HELLO,C#DEFGAB", "13:00,13:05,WORLD,ABCDEF"}));
     }
-}
+}*/
