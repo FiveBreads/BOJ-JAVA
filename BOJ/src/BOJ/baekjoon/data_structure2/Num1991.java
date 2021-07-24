@@ -1,11 +1,18 @@
-package team_note;
+package BOJ.baekjoon.data_structure2;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Scanner;
 
-public class Util {
+/**
+ * Created by prayzz12@gmail.com on 2021-07-24
+ * Blog : http://devonuu.tistory.com
+ * Github : http://github.com/devonuu
+ * title : 트리의 순회
+ * content : 트리
+ * link : [https://www.acmicpc.net/problem/1991]
+ */
+public class Num1991 {
 
     static class Node{
         private String data;
@@ -79,34 +86,21 @@ public class Util {
 
     }
 
-
-
-
-    // 최솟값과 최댓값 초기화
-    static int minValue = (int) 1e9;
-    static int maxValue = (int) -1e9;
-
-    //상하좌우 방향 설정
-    static int[] dx = {-1, 0, 1, 0};
-    static int[] dy = {0, 1, 0, -1};
-
-    static int n;
-
-    static void move(int x, int y){
-
-        //방향 이동
-        for (int i = 0; i < 4; i++) {
-            int nx = x + dx[i];
-            int ny = y + dy[i];
-            //배열 범위 밖으로 초과하는지 여부 검사
-            if (nx > 0 && nx <= n && ny > 0 && ny <= n) {
-
-            }
-        }
-    }
+    static Tree tree;
 
     public static void main(String[] args) {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();
+        tree = new Tree(new Node("A"));
 
+        for (int i = 0; i < N; i++) {
+            String parent = sc.next();
+            String left = sc.next();
+            String right = sc.next();
+            tree.addNode(parent, left, right);
+        }
+        System.out.println(tree.preOrder(tree.root, new StringBuilder()).toString());
+        System.out.println(tree.inOrder(tree.root, new StringBuilder()).toString());
+        System.out.println(tree.postOrder(tree.root, new StringBuilder()).toString());
     }
 }

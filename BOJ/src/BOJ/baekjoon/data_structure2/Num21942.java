@@ -17,11 +17,10 @@ import java.util.Map.Entry;
  * Blog : http://devonuu.tistory.com
  * Github : http://github.com/devonuu
  * title : 부품 대여장
- * content :
+ * content : Map, LocalTime, ChronoUnit
  * link : [https://www.acmicpc.net/problem/21942]
  */
 public class Num21942 {
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String[] input = br.readLine().split(" ");
@@ -32,7 +31,6 @@ public class Num21942 {
         int days = Integer.parseInt(ddMMhh[0]); //대여 가능 기간
 
         String[] hhmm = ddMMhh[1].split(":");
-
         long total_min = (days * 1440) + (Integer.parseInt(hhmm[0]) * 60) + Integer.parseInt(hhmm[1]); //최대 사용 가능 분
 
         Map<String, String[]> note = new HashMap<>(); // 진행상황 기록
@@ -41,13 +39,28 @@ public class Num21942 {
         String[] data;
 
         for (int i = 0; i < N; i++) {
+            /*
+            * data[0] -> yyyy-MM-dd
+            * data[1] -> hh:mm
+            * data[2] -> 장비 이름
+            * data[3] -> 대여자 이름
+            * */
             data = br.readLine().split(" ");
-            key = new StringBuilder().append(data[2]).append("_").append(data[3]);
-            if (note.containsKey(key.toString())){
+            key = new StringBuilder().append(data[2]).append("_").append(data[3]); // key는 장비이름_대여자이름
+            if (note.containsKey(key.toString())){ //동일인물이 같은 장비를 빌린적이 있다.
                 String[] before = note.get(key.toString());
 
-                start_date = new StringBuilder().append(before[0]).append("T").append(before[1]).append(":00");
-                end_Date = new StringBuilder().append(data[0]).append("T").append(data[1]).append(":00");
+                start_date = new StringBuilder()
+                    .append(before[0])
+                    .append("T")
+                    .append(before[1])
+                    .append(":00");
+
+                end_Date = new StringBuilder()
+                    .append(data[0])
+                    .append("T")
+                    .append(data[1])
+                    .append(":00");
 
                 double between = ChronoUnit.MINUTES.between(LocalDateTime.parse(start_date.toString()), LocalDateTime.parse(end_Date.toString()));
                 between -= total_min;
@@ -68,14 +81,16 @@ public class Num21942 {
             Collections.sort(entries, (o1, o2) -> o1.getKey().compareTo(o2.getKey()));
             StringBuilder answer = new StringBuilder();
             for (Entry<String, Double> entry : entries) {
-                answer.append(entry.getKey()).append(" ").append(String.format("%.0f",entry.getValue())).append("\n");
+                answer.append(entry.getKey())
+                    .append(" ")
+                    .append(String.format("%.0f",entry.getValue()))
+                    .append("\n");
             }
             System.out.println(answer.toString());
         }
     }
-
-
-    /*static class Rental{
+}
+/*static class Rental{
         private LocalDateTime startDate;
         private LocalDateTime endDate;
         private String part;
@@ -137,4 +152,3 @@ public class Num21942 {
             System.out.println(answer.toString());
         }
     }*/
-}
