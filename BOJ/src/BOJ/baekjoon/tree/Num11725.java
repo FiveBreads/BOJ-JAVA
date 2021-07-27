@@ -1,4 +1,4 @@
-package BOJ.baekjoon.data_structure2;
+package BOJ.baekjoon.tree;
 
 import java.util.ArrayList;
 import java.util.Scanner;
