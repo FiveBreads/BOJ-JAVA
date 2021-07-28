@@ -10,7 +10,7 @@ import java.util.Stack;
  * Blog : http://devonuu.tistory.com
  * Github : http://github.com/devonuu
  * title : 단어 뒤집기 2
- * content :
+ * content : stack
  * link : [https://www.acmicpc.net/problem/17413]
  */
 public class Num17413 {
@@ -23,28 +23,32 @@ public class Num17413 {
         Stack<Character> stk = new Stack<>();
         int startIdx = -1;
         int endIdx = -1;
+        StringBuilder answer = new StringBuilder();
+        boolean isInner = false;
         for (int i = 0; i < chars.length; i++) {
-            char part = chars[i];
-            if (part == '<') stk.push('<');
-            else if (part == '>') stk.pop();
-            else if ((i == chars.length - 1) || chars[i + 1] == ' ' || chars[i + 1] == '<'){
-                if (stk.isEmpty()) {
-                    endIdx = i;
-                    char tmp;
-                    while (startIdx <= endIdx){
-                        tmp = chars[endIdx];
-                        chars[endIdx] = chars[startIdx];
-                        chars[startIdx] = tmp;
-                        startIdx++;
-                        endIdx--;
-                    }
-                    startIdx = -1;
+            if (chars[i] == '<'){
+                while (!stk.isEmpty()){
+                    answer.append(stk.pop());
                 }
-            }else if(part != ' ' && stk.isEmpty()){
-                if (startIdx < 0) startIdx = i;
+                answer.append(chars[i]);
+                isInner = true;
+            }else if (chars[i] == '>'){
+                answer.append(chars[i]);
+                isInner = false;
+            }else if (isInner){
+                answer.append(chars[i]);
+            }else if (!isInner && Character.isWhitespace(chars[i])){
+                while (!stk.isEmpty()){
+                    answer.append(stk.pop());
+                }
+                answer.append(chars[i]);
+            }else{
+                stk.push(chars[i]);
             }
         }
-        String s = new String(chars);
-        System.out.println(s);
+        while (!stk.isEmpty()){
+            answer.append(stk.pop());
+        }
+        System.out.println(answer.toString());
     }
 }
