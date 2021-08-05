@@ -79,9 +79,6 @@ public class Util {
 
     }
 
-
-
-
     // 최솟값과 최댓값 초기화
     static int minValue = (int) 1e9;
     static int maxValue = (int) -1e9;
@@ -103,6 +100,36 @@ public class Util {
 
             }
         }
+    }
+
+    //최대 공약수
+    static int gcd(int a, int b) {
+        int big = a;
+        int small = b;
+        if (a <= b) {
+            big = b;
+            small = a;
+        }
+        while (big % small != 0){
+            int r = big % small;
+            big = small;
+            small = r;
+        }
+        return small;
+    }
+
+    //최소 공배수
+    static int lcm(int x, int y) {
+        return (x * y) / gcd(x, y);
+    }
+
+    //소수 판별
+    static boolean isPrime(int num){
+        if (num == 1) return false;
+        for(int i=2; i*i<=num; i++){
+            if(num % i == 0) return false;
+        }
+        return true;
     }
 
     public static void main(String[] args) {
