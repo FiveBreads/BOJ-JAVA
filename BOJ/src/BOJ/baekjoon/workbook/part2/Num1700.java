@@ -1,7 +1,6 @@
 package BOJ.baekjoon.workbook.part2;
 
-import java.util.LinkedList;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by prayzz12@gmail.com on 2021-08-06
@@ -12,7 +11,50 @@ import java.util.Scanner;
  * link : [https://www.acmicpc.net/problem/1700]
  */
 public class Num1700 {
-    // 1. 멀티탭에 이미 내가 있다. 그러면 아무고토 안함.
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int k = sc.nextInt();
+        int[] order = new int[k];
+        for (int i = 0; i < k; i++) {
+            order[i] = sc.nextInt();
+        }
+        int answer = 0;
+        LinkedList<Integer> multitap = new LinkedList<>();
+        for (int i = 0; i < k; i++) {
+            int device = order[i];
+            if (multitap.indexOf(device) >= 0) continue;
+            else {
+                if (multitap.size() < n) multitap.add(device);
+                else{
+                    // 현재 멀티탭에 꽂힌 녀석들 중 가장 나중에 등장하는 녀석을 찾는다.
+                    // 다음번 순서부터 끝까지 돌면서 현재 멀티탭에 있는 애를 순서대로 지워간다.
+                    // 종료가 되는 시점은 두가지 경우. 멀티탭에 남아있는 애가 하나일 경우.
+                    // 혹은 멀티탭에 여러개가 남아있는데 order 끝까지 간 경우.
+                    // 멀티탭에 여러개가 남아있는데 order의 순번이 끝까지 가게 된다면 현재 멀티탭에 꽂힌 애들중 n개가 앞으로 다시는 등장하지 않는다는 뜻이다.
+                    // 그렇기 때문에 어떤 녀석을 제거해도 상관은 없다.
+                    // 하지만 순서가 다 지나기 전에 멀티탭에 한개가 남은 경우에는 그 남은 녀석이 가장 나중에 등장한다는 뜻이기 때문에 남은 마지막이 대상이 된다.
+                    int nextOrderIndex = i + 1;
+                    LinkedList<Integer> list = new LinkedList<>();
+                    list.addAll(multitap);
+                    while ((list.size() > 1) && (nextOrderIndex < k)){
+                        list.remove((Object) order[nextOrderIndex]);
+                        nextOrderIndex++;
+                    }
+                    int index = multitap.indexOf(list.getFirst());
+                    multitap.set(index, device);
+                    answer++;
+                }
+            }
+        }
+        System.out.println(answer);
+    }
+}
+
+// 1회차 풀이
+/*
+// 1. 멀티탭에 이미 내가 있다. 그러면 아무고토 안함.
     // 2. 멀티탭에 내가 없다.
     //  2.1 자리가 있다.
     //      나를 넣는다.
@@ -56,4 +98,4 @@ public class Num1700 {
         }
         System.out.println(answer);
     }
-}
+* */

@@ -13,6 +13,92 @@ import java.util.*;
 public class Num1062 {
 
     static int n, k, max;
+    static String[] words;
+    static boolean[] alpha;
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        n = sc.nextInt();
+        k = sc.nextInt();
+
+        if (k < 5) {
+            System.out.println(0);
+            return;
+        }
+        if (k == 26){
+            System.out.println(n);
+            return;
+        }
+
+        init();
+
+        for (int i = 0; i < n; i++) {
+            String word = sc.next();
+            words[i] = word.substring(4, word.length() - 4);
+        }
+
+        dfs(0, 1);
+
+        System.out.println(max);
+    }
+
+    static void dfs(int count, int index){
+        if (count == (k - 5)){
+            validation();
+            return;
+        }
+        for (int i = index; i < 26; i++) {
+            if (alpha[i]) continue;
+            alpha[i] = true;
+            dfs(count + 1, i + 1);
+            alpha[i] = false;
+        }
+    }
+    
+    static void validation(){
+        int cnt = 0;
+        //현재 단어 중에서 사용 한 알파벳 안에 들어가 있는게 없으면 탈락
+        for (int i = 0; i < n; i++) {
+            boolean isMatch = true;
+            for (int j = 0; j < words[i].length(); j++) {
+                if (!alpha[words[i].charAt(j) - 97]) {
+                    isMatch = false;
+                    break;
+                }
+            }
+            if (isMatch) cnt++;
+        }
+        max = Math.max(max, cnt);
+    }
+
+    static void init() {
+        words = new String[n];
+        max = 0;
+        alpha = new boolean[26];
+
+        alpha['a' - 97] = true;
+        alpha['c' - 97] = true;
+        alpha['i' - 97] = true;
+        alpha['n' - 97] = true;
+        alpha['t' - 97] = true;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+//1회차 풀이
+/*
+static int n, k, max;
     static List<String> words;
     static boolean[] useAlpha;
 
@@ -81,4 +167,4 @@ public class Num1062 {
         }
         return count;
     }
-}
+**/
