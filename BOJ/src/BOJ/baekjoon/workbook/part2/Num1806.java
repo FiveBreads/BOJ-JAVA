@@ -11,36 +11,34 @@ import java.util.*;
  * link : [https://www.acmicpc.net/problem/1806]
  */
 public class Num1806 {
-    public static void main(String[] args) throws Exception {
+
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        long S = Long.parseLong(st.nextToken());
+
+        int n = Integer.parseInt(st.nextToken());
+        int s = Integer.parseInt(st.nextToken());
+        int[] nums = new int[n];
+
         st = new StringTokenizer(br.readLine());
-        int[] Narr = new int[N];
-        for(int i = 0; i < N; i++){
-            Narr[i] = Integer.parseInt(st.nextToken());
-        }
-        int ans = 100001, sum = 0;
-        int firstPointer = 0, secondPointer = 0;
-        while(true){
-            if(sum >= S){
-                sum -= Narr[firstPointer++];
-                ans = Math.min(ans, (secondPointer - firstPointer) + 1);
-            }
-            else if(secondPointer == N) break;
-            else sum += Narr[secondPointer++];
-        }
-        if(ans == 100001){
-            bw.write(0 + "\n");
-        } else {
-            bw.write(ans + "\n");
+        for (int i = 0; i < n; i++) {
+            nums[i] = Integer.parseInt(st.nextToken());
         }
 
-        bw.flush();
-        br.close();
-        bw.close();
+        int start = 0;
+        int end = 0;
+
+        int sum = 0;
+        int min = 10001;
+
+        while(end < n){
+            if (sum < s){
+                sum += nums[end++];
+            }else {
+                sum -= nums[start++];
+                min = Math.min(min, (end - start) + 1);
+            }
+        }
+        System.out.println(min > 10000 ? 0 : min);
     }
 }
