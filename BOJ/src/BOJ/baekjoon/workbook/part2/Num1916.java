@@ -13,61 +13,79 @@ import java.util.*;
  */
 public class Num1916 {
 
-    static class Bus{
-        private int from;
-        private int to;
-        private int cost;
+    static final int INF = (int) 1e9;
+    static int[] d;
+    static ArrayList<ArrayList<Node>> graph;
 
-        public Bus(int from, int to, int cost) {
-            this.from = from;
-            this.to = to;
-            this.cost = cost;
+    static int n, m;
+
+    static class Node implements Comparable<Node>{
+        private int index;
+        private int dist;
+
+        public Node(int index, int dist) {
+            this.index = index;
+            this.dist = dist;
+        }
+
+        @Override
+        public int compareTo(Node o) {
+            return Integer.compare(this.dist, o.dist);
+        }
+    }
+
+    static void dijkstra(int start){
+        PriorityQueue<Node> pq = new PriorityQueue<>();
+        pq.offer(new Node(start, 0));
+        d[start] = 0;
+
+        while (!pq.isEmpty()){
+            Node poll = pq.poll();
+            int dist = poll.dist;
+            int now = poll.index;
+
+            if (d[now] < dist) continue;
+
+            for (int i = 0; i < graph.get(now).size(); i++) {
+                int cost = d[now] + graph.get(now).get(i).dist;
+                if (cost < d[graph.get(now).get(i).index]){
+                    d[graph.get(now).get(i).index] = cost;
+                    pq.offer(new Node(graph.get(now).get(i).index, cost));
+                }
+            }
         }
     }
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
-        int m = Integer.parseInt(br.readLine());
+        n = Integer.parseInt(br.readLine());
+        m = Integer.parseInt(br.readLine());
 
-        int[] distance = new int[n + 1];
-        Arrays.fill(distance, Integer.MAX_VALUE - 1);
+        d = new int[n + 1];
+        graph = new ArrayList<>();
 
-        ArrayList<Bus>[] busRoute = new ArrayList[m + 1];
-        for (int i = 0; i <= m; i++) {
-            busRoute[i] = new ArrayList<>();
+        for (int i = 0; i <= n; i++) {
+            graph.add(new ArrayList<>());
+            d[i] = INF;
         }
 
         StringTokenizer st;
-        int from, to, cost;
+        int now, next, cost;
         for (int i = 0; i < m; i++) {
             st = new StringTokenizer(br.readLine());
-            from = Integer.parseInt(st.nextToken());
-            to = Integer.parseInt(st.nextToken());
+            now = Integer.parseInt(st.nextToken());
+            next = Integer.parseInt(st.nextToken());
             cost = Integer.parseInt(st.nextToken());
-            busRoute[from].add(new Bus(from, to, cost));
+            graph.get(now).add(new Node(next, cost));
         }
 
         st = new StringTokenizer(br.readLine());
-        from = Integer.parseInt(st.nextToken());
-        to = Integer.parseInt(st.nextToken());
+        now = Integer.parseInt(st.nextToken());
+        next = Integer.parseInt(st.nextToken());
 
-        Queue<Bus> que = new LinkedList<>();
-        for (int i = 0; i < busRoute[from].size(); i++) {
-            que.offer(busRoute[from].get(i));
-        }
-        distance[from] = 0;
+        dijkstra(now);
 
-        while (!que.isEmpty()){
-            Bus poll = que.poll();
-            if (distance[poll.to] > distance[poll.from] + poll.cost){
-                distance[poll.to] = distance[poll.from] + poll.cost;
-                for (int i = 0; i < busRoute[poll.to].size(); i++) {
-                    que.offer(busRoute[poll.to].get(i));
-                }
-            }
-        }
-        System.out.println(distance[to]);
+        System.out.println(d[next]);
     }
 }
 
