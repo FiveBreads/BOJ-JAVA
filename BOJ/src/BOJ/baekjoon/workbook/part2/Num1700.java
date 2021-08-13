@@ -7,7 +7,7 @@ import java.util.*;
  * Blog : http://devonuu.tistory.com
  * Github : http://github.com/devonuu
  * title : 멀티탭 스케줄링
- * content :
+ * content : -졸업-
  * link : [https://www.acmicpc.net/problem/1700]
  */
 public class Num1700 {
@@ -16,41 +16,82 @@ public class Num1700 {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
         int k = sc.nextInt();
-        int[] order = new int[k];
-        for (int i = 0; i < k; i++) {
-            order[i] = sc.nextInt();
+
+        if (n >= k) {
+            System.out.println(0);
+            return;
         }
-        int answer = 0;
-        LinkedList<Integer> multitap = new LinkedList<>();
+
+        int[] devices = new int[k];
         for (int i = 0; i < k; i++) {
-            int device = order[i];
-            if (multitap.indexOf(device) >= 0) continue;
-            else {
-                if (multitap.size() < n) multitap.add(device);
-                else{
-                    // 현재 멀티탭에 꽂힌 녀석들 중 가장 나중에 등장하는 녀석을 찾는다.
-                    // 다음번 순서부터 끝까지 돌면서 현재 멀티탭에 있는 애를 순서대로 지워간다.
-                    // 종료가 되는 시점은 두가지 경우. 멀티탭에 남아있는 애가 하나일 경우.
-                    // 혹은 멀티탭에 여러개가 남아있는데 order 끝까지 간 경우.
-                    // 멀티탭에 여러개가 남아있는데 order의 순번이 끝까지 가게 된다면 현재 멀티탭에 꽂힌 애들중 n개가 앞으로 다시는 등장하지 않는다는 뜻이다.
-                    // 그렇기 때문에 어떤 녀석을 제거해도 상관은 없다.
-                    // 하지만 순서가 다 지나기 전에 멀티탭에 한개가 남은 경우에는 그 남은 녀석이 가장 나중에 등장한다는 뜻이기 때문에 남은 마지막이 대상이 된다.
-                    int nextOrderIndex = i + 1;
+            devices[i] = sc.nextInt();
+        }
+
+        int count = 0;
+        LinkedList<Integer> multiTab = new LinkedList<>();
+        for (int i = 0; i < k; i++) {
+            int device = devices[i];
+            int index = multiTab.indexOf(device);
+            if (index < 0){ //멀티탭에 안 꽂혀 있고
+                if (multiTab.size() < n) multiTab.add(device); //자리가 있다.
+                else{ //자리가 없다.
                     LinkedList<Integer> list = new LinkedList<>();
-                    list.addAll(multitap);
-                    while ((list.size() > 1) && (nextOrderIndex < k)){
-                        list.remove((Object) order[nextOrderIndex]);
-                        nextOrderIndex++;
+                    list.addAll(multiTab);
+                    int nextIndex = i + 1;
+                    while (list.size() > 1 && nextIndex < k){
+                        list.remove( (Object) devices[nextIndex++]);
                     }
-                    int index = multitap.indexOf(list.getFirst());
-                    multitap.set(index, device);
-                    answer++;
+                    index = multiTab.indexOf(list.getFirst());
+                    multiTab.set(index, device);
+                    count++;
                 }
             }
         }
-        System.out.println(answer);
+        System.out.println(count);
     }
 }
+
+//2회차 풀이
+/*
+public static void main(String[] args) {
+    Scanner sc = new Scanner(System.in);
+    int n = sc.nextInt();
+    int k = sc.nextInt();
+    int[] order = new int[k];
+    for (int i = 0; i < k; i++) {
+        order[i] = sc.nextInt();
+    }
+    int answer = 0;
+    LinkedList<Integer> multitap = new LinkedList<>();
+    for (int i = 0; i < k; i++) {
+        int device = order[i];
+        if (multitap.indexOf(device) >= 0) continue;
+        else {
+            if (multitap.size() < n) multitap.add(device);
+            else{
+                // 현재 멀티탭에 꽂힌 녀석들 중 가장 나중에 등장하는 녀석을 찾는다.
+                // 다음번 순서부터 끝까지 돌면서 현재 멀티탭에 있는 애를 순서대로 지워간다.
+                // 종료가 되는 시점은 두가지 경우. 멀티탭에 남아있는 애가 하나일 경우.
+                // 혹은 멀티탭에 여러개가 남아있는데 order 끝까지 간 경우.
+                // 멀티탭에 여러개가 남아있는데 order의 순번이 끝까지 가게 된다면 현재 멀티탭에 꽂힌 애들중 n개가 앞으로 다시는 등장하지 않는다는 뜻이다.
+                // 그렇기 때문에 어떤 녀석을 제거해도 상관은 없다.
+                // 하지만 순서가 다 지나기 전에 멀티탭에 한개가 남은 경우에는 그 남은 녀석이 가장 나중에 등장한다는 뜻이기 때문에 남은 마지막이 대상이 된다.
+                int nextOrderIndex = i + 1;
+                LinkedList<Integer> list = new LinkedList<>();
+                list.addAll(multitap);
+                while ((list.size() > 1) && (nextOrderIndex < k)){
+                    list.remove((Object) order[nextOrderIndex]);
+                    nextOrderIndex++;
+                }
+                int index = multitap.indexOf(list.getFirst());
+                multitap.set(index, device);
+                answer++;
+            }
+        }
+    }
+    System.out.println(answer);
+}
+* */
 
 // 1회차 풀이
 /*

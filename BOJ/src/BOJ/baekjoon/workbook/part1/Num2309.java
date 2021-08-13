@@ -7,12 +7,45 @@ import java.util.*;
  * Blog : http://devonuu.tistory.com
  * Github : http://github.com/devonuu
  * title : 일곱 난쟁이
- * content :
+ * content : -졸업-
  * link : [https://www.acmicpc.net/problem/2309]
  */
 public class Num2309 {
 
-    static int[] dwarves;
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int[] dwarves = new int[9];
+        boolean[] visit = new boolean[9];
+        int sum = 0;
+        for (int i = 0; i < 9; i++) {
+            dwarves[i] = sc.nextInt();
+            sum += dwarves[i];
+        }
+
+        Arrays.sort(dwarves);
+        boolean flag = false;
+        for (int i = 0; i < 9; i++) {
+            for (int j = i + 1; j < 9; j++) {
+                int tmp = dwarves[i] + dwarves[j] + 100;
+                if (tmp == sum) {
+                    flag = true;
+                    visit[i] = true;
+                    visit[j] = true;
+                    break;
+                }
+            }
+            if (flag) break;
+        }
+        for (int i = 0; i < 9; i++) {
+            if (visit[i]) continue;
+            System.out.println(dwarves[i]);
+        }
+    }
+}
+
+//2회차 풀이
+/*
+static int[] dwarves;
     static int sum;
     static boolean[] visit;
     static List<Integer> answer;
@@ -56,7 +89,7 @@ public class Num2309 {
             visit[i] = false;
         }
     }
-}
+* */
 
 //1회차 풀이
 /*

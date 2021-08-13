@@ -7,12 +7,78 @@ import java.util.*;
  * Blog : http://devonuu.tistory.com
  * Github : http://github.com/devonuu
  * title : 가르침
- * content :
+ * content : -졸업-
  * link : [https://www.acmicpc.net/problem/1062]
  */
 public class Num1062 {
 
-    static int n, k, max;
+    static int n, k, count;
+    static boolean[] alpha;
+    static List<String> list;
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        n = sc.nextInt();
+        k = sc.nextInt();
+
+        if (k < 5) {
+            System.out.println(0);
+            return;
+        }
+        if (k == 26) {
+            System.out.println(n);
+            return;
+        }
+
+        count = 0;
+        list = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            String str = sc.next();
+            list.add(str.substring(4, str.length() - 4));
+        }
+        alpha = new boolean[26];
+        alpha['a' - 97] = true;
+        alpha['c' - 97] = true;
+        alpha['t' - 97] = true;
+        alpha['i' - 97] = true;
+        alpha['n' - 97] = true;
+
+        dfs(1, 0);
+
+        System.out.println(count);
+    }
+
+    static void dfs(int index, int cnt){
+        if (cnt == k - 5){
+            int tmp = 0;
+            for (int i = 0; i < list.size(); i++) {
+                boolean flag = true;
+                for (int j = 0; j < list.get(i).length(); j++) {
+                    if (!alpha[list.get(i).charAt(j) - 97]){
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag){
+                    tmp++;
+                }
+            }
+            count = Math.max(count, tmp);
+            return;
+        }
+
+        for (int i = index; i < 26; i++) {
+            if (alpha[i]) continue;
+            alpha[i] = true;
+            dfs(i + 1, cnt + 1);
+            alpha[i] = false;
+        }
+    }
+}
+
+//2회차 풀이
+/*
+static int n, k, max;
     static String[] words;
     static boolean[] alpha;
 
@@ -54,7 +120,7 @@ public class Num1062 {
             alpha[i] = false;
         }
     }
-    
+
     static void validation(){
         int cnt = 0;
         //현재 단어 중에서 사용 한 알파벳 안에 들어가 있는게 없으면 탈락
@@ -82,19 +148,7 @@ public class Num1062 {
         alpha['n' - 97] = true;
         alpha['t' - 97] = true;
     }
-}
-
-
-
-
-
-
-
-
-
-
-
-
+* */
 
 //1회차 풀이
 /*
