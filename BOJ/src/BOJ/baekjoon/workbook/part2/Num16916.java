@@ -1,6 +1,5 @@
 package BOJ.baekjoon.workbook.part2;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -13,7 +12,60 @@ import java.util.Scanner;
  */
 public class Num16916 {
 
-    static int[] pi;
+    static int[] part;
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String str = sc.next();
+        String targetPartStr = sc.next();
+
+        part = setPart(targetPartStr);
+        System.out.println(kmp(str, targetPartStr));
+    }
+
+    static int kmp(String str, String targetPartStr){
+        int index = 0;
+        for (int i = 1; i < str.length(); i++) {
+            while (str.charAt(i) != targetPartStr.charAt(index) && index > 0){
+                index = part[i - 1];
+            }
+            if (str.charAt(i) == targetPartStr.charAt(index)){
+                index++;
+            }
+            if (index >= targetPartStr.length()) return 1;
+        }
+        return 0;
+    }
+
+    static int[] setPart(String str){
+        int[] iterArr = new int[str.length()];
+        int index = 0;
+
+        for (int i = 1; i < str.length(); i++) {
+            while (str.charAt(i) != str.charAt(index) && index > 0){ //반복이 끝났다.
+                index = iterArr[index - 1];
+            }
+            if (str.charAt(i) == str.charAt(index)){
+                iterArr[i] = ++index;
+            }
+        }
+        return iterArr;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+//1회차 풀이
+/*
+static int[] pi;
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -52,4 +104,4 @@ public class Num16916 {
         }
         return iterArr;
     }
-}
+* */
